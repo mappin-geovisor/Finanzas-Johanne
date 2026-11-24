@@ -61,7 +61,8 @@ footer{padding:8px 4px 0;color:var(--muted);font-size:12px;text-align:center}
 }
 
 header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-gradient(115deg,#102b37,#14594d);min-height:145px}.banner h1{font-size:clamp(25px,6vw,38px);position:relative;z-index:1}.banner-meta{font-size:11px;letter-spacing:2px;margin-top:13px;color:#b9d7d1}.banner-meta span{padding:0 7px}.banner-art{position:absolute;width:45%;height:85%;right:14px;bottom:0;pointer-events:none}.nav{border-bottom:1px solid var(--line)}.nav button{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}.nav button svg{width:19px;height:19px}.card strong{font-size:clamp(17px,4vw,26px)}.card:first-child{border-top:3px solid #196a58}.quick button{font-weight:650}.tableWrap button{font-size:12px}.agenda-list{display:grid;gap:8px}.agenda-item{padding:12px;border:1px solid var(--line);border-radius:14px}.agenda-item header{padding:0;display:flex;justify-content:space-between;gap:10px}.agenda-item .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.agenda-item small{color:var(--muted)}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0}.calendar-grid button{padding:4px;min-height:40px;font-size:12px}.calendar-grid button.selected{background:var(--brand);color:white}.calendar-grid .dot{display:block;font-size:9px;color:#79ad9b}.calendar-grid .selected .dot{color:white}.calendar-grid .weekday{text-align:center;font-size:11px;color:var(--muted)}.row input,.row select{min-width:0}.banner p{display:none}@media(max-width:600px){.nav{position:fixed;bottom:0;top:auto;left:0;right:0;padding:6px 8px calc(7px + env(safe-area-inset-bottom));background:white;box-shadow:0 -4px 20px #102b3710;gap:3px}.nav button{font-size:11px}.nav button.active{box-shadow:none;background:var(--soft)}.banner-art{opacity:.55}.tableWrap input,.tableWrap select{min-width:100px}body{padding-bottom:100px}}
-</style>
+[hidden]{display:none!important}.row>*{min-width:0}.row input,.row select{min-width:0;max-width:100%;box-sizing:border-box}input[type=date],input[type=month]{min-width:0;width:100%}.billcard{border:1px solid #dce5e0;border-radius:14px;padding:12px;margin:10px 0}.billcard summary{color:#196a58;padding:10px 0;cursor:pointer}.billcard .row{align-items:start}.billcard .row label{flex:1 1 100%}.billcard .kpiLine{border:0}.tableWrap#expenseTable{border:0;overflow:visible}.panel summary{font-weight:600;cursor:pointer}@media(max-width:600px){#movementForm>label{flex:1 1 100%}#movementForm>div{flex:1 1 100%}#movementForm button{width:100%}}
+#monthlyPanel .cards{margin-top:12px;grid-template-columns:repeat(2,minmax(0,1fr))}#monthlyPanel .card{box-shadow:none;padding:12px}#monthlyPanel .card strong{overflow-wrap:anywhere}.progressTrack{height:9px;background:#e5ede9;border-radius:20px;overflow:hidden;margin:8px 0 12px}.progressFill{height:100%;background:#196a58;border-radius:20px}.monthlyGraph{display:grid;gap:8px;margin:12px 0}.monthBar{display:grid;grid-template-columns:65px 1fr;gap:8px;align-items:center;font-size:12px}.monthBar i{height:9px;background:#196a58;display:block;border-radius:8px}.monthBar div{min-width:0}.monthBar span{display:block;color:var(--muted)}#monthlyPanel details{margin-top:12px}#monthlyPanel summary{padding:10px 0}#monthlyPanel .row>*{flex:1 1 120px}#monthlyPanel .kpiLine strong{white-space:nowrap}</style>
 <link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#123d42"></head>
 <body>
 <header>
@@ -76,6 +77,7 @@ header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-g
 
   <section id="inicio" class="show">
     <div class="cards" id="homeCards"></div>
+    <div class="panel" id="monthlyPanel"><h2>Resumen mensual</h2><div class="row"><label>Mes<input type="month" id="summaryMonth" min="2026-11" max="2028-11"></label><label>Cuenta<select id="summaryScope"><option value="personal">Personal</option><option value="business">MAPPIN</option><option value="all">Total</option></select></label></div><div id="monthlyContent"></div><details><summary>Detalle e historial</summary><div id="monthlyDetail"></div><div id="monthlyHistory"></div></details></div>
     <div class="panel">
       <h2>Hoy</h2>
       <div id="todayLines"></div>
@@ -101,14 +103,14 @@ header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-g
     </div>
     <div class="cards" id="agendaCards"></div>
     <div class="panel">
-      <h2>Compromisos</h2>
+      <h2>Cuentas por pagar</h2><label>Buscar<input id="billSearch" placeholder="CGE, arriendo..."></label><label>Estado<select id="billStatus"><option value="pending">Pendientes</option><option value="paid">Pagadas</option><option value="all">Todas</option></select></label>
       <div id="calendarGrid"></div><div id="agendaTable"></div>
     </div>
-    <div class="panel">
-      <h2>Reglas</h2>
+    <details class="panel">
+      <summary>Reglas automáticas</summary>
       <p class="muted">Aquí puedes terminar, pausar u omitir compromisos automáticos sin borrar el historial.</p>
       <div class="tableWrap" id="rulesTable"></div>
-    </div>
+    </details>
   </section>
 
   <section id="movs">
@@ -120,9 +122,9 @@ header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-g
           <label>Fecha<input name="date" type="date" required></label>
           <label>Tipo<select name="type"><option value="income">Ingreso</option><option value="expense">Gasto</option><option value="debt">Pago deuda</option><option value="saving">Ahorro</option><option value="reserve">Emergencia</option></select></label>
           <label>Detalle<input name="name" required></label>
-          <label>Deuda<select name="debt" id="movementDebt"><option value="">No aplica</option></select></label>
+          <label id="debtField">Deuda<select name="debt" id="movementDebt"><option value="">No aplica</option></select></label>
           <label>Monto<input name="amount" type="number" min="1" required></label>
-          <label>Capital<input name="principal" type="number" min="0" value="0"></label>
+          <label id="capitalField">Capital amortizado<input name="principal" type="number" min="0" value="0"></label>
           <div><button class="primary" type="submit">Guardar</button></div>
         </form>
       </div>
@@ -158,14 +160,14 @@ header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-g
 
   <section id="mas">
     <div class="panel">
-      <h2>Base</h2>
+      <h2>Presupuesto</h2><div id="budgetSummary"></div>
       <form id="settingsForm" class="row">
         <label>Pago día 5<input name="salary" type="number" min="0"></label>
         <label>Pago día 20<input name="advance" type="number" min="0"></label>
         <label>Ingreso mensual MAPPIN<input name="extra" type="number" min="0"></label>
-        <label>Caja personal<input name="cash" type="number" min="0"></label>
-        <label>Caja MAPPIN<input name="businessCash" type="number" min="0"></label>
-        <label>Ahorro meta<input name="savingGoal" type="number" min="0"></label>
+        <label>Saldo inicial personal<input name="cash" type="number" min="0"></label>
+        <label>Saldo inicial MAPPIN<input name="businessCash" type="number" min="0"></label>
+        <label>Meta mensual de ahorro<input name="savingGoal" type="number" min="0"></label>
         <div><button class="primary" type="submit">Actualizar</button></div>
       </form>
     </div>
@@ -202,7 +204,7 @@ header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-g
 const $ = s => document.querySelector(s);
 const storageKeys = ['finanzas-johanne-web','finanzas-johanne-v5','finanzas24-v1'];
 const monthList = [];
-for(let y=2026,m=12;y<2028 || (y===2028&&m<=11);m++){ if(m===13){m=1;y++;} monthList.push(`${y}-${String(m).padStart(2,'0')}`); }
+for(let i=0;i<24;i++){const d=new Date(2026,11+i,1);monthList.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'));}
 const initial = {settings:{salary:0,advance:0,extra:0,cash:0,businessCash:0,savingGoal:0},expenses:[],debts:[],actuals:[],events:[],marks:{},ui:{tab:'inicio'}};
 let state = loadState();
 let selectedDay=0;
@@ -281,8 +283,36 @@ function homeData(){
     capital: capitalPaid(),
   };
 }
+function monthlyStats(m,scope){
+ const match=x=>scope==='all'||x.scope===scope;
+ const real=state.actuals.filter(x=>match(x)&&String(x.date).startsWith(m));
+ const total=(a,f)=>sumBy(a.filter(f),x=>num(x.amount));
+ const items=agendaItems(m,scope);
+ const marked=new Set(Object.values(state.marks));
+ let pending=0,done=0,planned=0,completed=0,count=0,paidScheduled=0;
+ for(const it of items){const a=state.actuals.find(x=>x.id===state.marks[m+'|'+it.kind+'|'+it.id]);if(a){const p=num(a.plannedAmount??it.amount??a.amount);planned+=p;done+=p;completed++;count++;paidScheduled+=num(a.amount)}else if(it.active&&it.amount>0){planned+=num(it.amount);pending+=num(it.amount);count++}}
+ // Preserve payments linked to rules since deleted, without pretending they are still future obligations.
+ for(const [key,id] of Object.entries(state.marks)){const parts=key.split('|');if(parts.length!==3||parts[0]!==m||items.some(it=>it.id===parts[2]&&it.kind===parts[1]))continue;const a=state.actuals.find(x=>x.id===id&&match(x));if(a){let p=num(a.plannedAmount??a.amount);planned+=p;done+=p;completed++;count++;paidScheduled+=num(a.amount)}}
+ const ev=state.events.filter(x=>match(x)&&String(x.date).startsWith(m)&&!x.uncertain);
+ const extraPlan=total(ev,x=>x.type==='expense');
+ const incomePlan=(m>='2026-12'?((scope!=='business'?num(state.settings.salary)+num(state.settings.advance):0)+(scope!=='personal'?num(state.settings.extra):0)):0)+total(ev,x=>x.type==='income');
+ const income=total(real,x=>x.type==='income'),expense=total(real,x=>x.type==='expense'),debt=total(real,x=>x.type==='debt');
+ const saving=total(real,x=>x.type==='saving')-total(real,x=>x.type==='unsave'),reserve=total(real,x=>x.type==='reserve')-total(real,x=>x.type==='withdraw');
+ const unlinked=total(real,x=>x.type==='expense'&&!marked.has(x.id));
+ return {incomePlan,income,expense,debt,paid:expense+debt,saving,reserve,unlinked,pending,planned,extraPlan,done,count,completed,paidScheduled,late:sumBy(state.debts.filter(match),x=>num(x.late)),hasReal:real.length>0};
+}
+function renderMonthly(){
+ const m=$('#summaryMonth').value||'2026-12',scope=$('#summaryScope').value,t=monthlyStats(m,scope),pct=t.count?Math.round(t.completed/t.count*100):0;
+ const card=(n,v)=>`<div class="card"><small>${n}</small><strong class="${v<0?'dangerText':''}">${money(v)}</strong></div>`;
+ const line=(n,v)=>`<div class="kpiLine"><span>${n}</span><strong class="${v<0?'dangerText':''}">${money(v)}</strong></div>`;
+ $('#monthlyContent').innerHTML=`<div class="cards">${card('Ingreso real',t.income)}${card('Pagado este mes',t.paid)}${card('Por pagar en Agenda',t.pending)}${card('Ahorro real',t.saving)}</div><div class="kpiLine"><span>Compromisos cumplidos</span><b>${t.completed}/${t.count} · ${pct}%</b></div><div class="progressTrack"><div class="progressFill" style="width:${pct}%"></div></div>${line('Ingresos previstos',t.incomePlan)}${line('Presupuesto del mes',t.planned+t.extraPlan)}${line('Balance real del mes',t.income-t.paid-t.saving-t.reserve)}${line('Margen previsto antes de atrasos',t.incomePlan-t.planned-t.extraPlan)}${line('Atrasos conocidos (actuales)',t.late)}<p class="muted" style="font-size:12px">Pagado según fecha real. Pendiente según Agenda, sin atrasos ni extras previstos. No equivale a saldo disponible. Presupuesto editable; cifras históricas reales según registros.</p><button class="soft" data-month-agenda>Ver pendientes</button>`;
+ $('#monthlyDetail').innerHTML=line('Gastos reales',t.expense)+line('Pagos de deuda',t.debt)+line('Gastos sin vínculo a Agenda',t.unlinked)+line('Extras previstos',t.extraPlan)+line('Fondo de emergencia neto',t.reserve)+line('Pagos asociados al mes de Agenda',t.paidScheduled)+line('Diferencia real vs presupuesto',t.paid-t.planned-t.extraPlan);
+ const history=['2026-11',...monthList].filter(x=>x<=m).map(x=>[x,monthlyStats(x,scope)]);const max=Math.max(1,...history.map(([x,v])=>v.paid));
+ $('#monthlyHistory').innerHTML='<h3 style="margin-top:16px">Historial real</h3><div class="monthlyGraph">'+history.map(([x,v])=>`<div class="monthBar"><b>${x.slice(5)}/${x.slice(2,4)}</b><div><i style="width:${v.paid/max*100}%"></i><span>${v.hasReal?money(v.paid)+' pagado':'Sin registros'}</span></div></div>`).join('')+'</div><div class="tableWrap"><table><thead><tr><th>Mes</th><th>Ingreso</th><th>Pagado</th><th>Ahorro</th></tr></thead><tbody>'+history.map(([x,v])=>`<tr><td>${x}</td><td>${v.hasReal?money(v.income):'—'}</td><td>${v.hasReal?money(v.paid):'—'}</td><td>${v.hasReal?money(v.saving):'—'}</td></tr>`).join('')+'</tbody></table></div>';
+}
 function renderHome(){
   const h = homeData();
+  renderMonthly();
   $('#homeCards').innerHTML = [
     ['Personal',h.personal],['MAPPIN',h.business],['Deuda',h.debt],['Ahorro',h.savings]
   ].map(([k,v])=>`<div class="card"><small>${k}</small><strong class="${v<0?'dangerText':''}">${money(v)}</strong></div>`).join('');
@@ -319,6 +349,7 @@ function agendaItems(month, scope='all'){
   }
   return out.sort((a,b)=>(a.day-b.day)||a.name.localeCompare(b.name));
 }
+function paymentLink(id){const e=state.expenses.find(x=>x.id===id);if(!e)return '';let u='';try{const x=new URL(e.url);if(x.protocol==='https:')u=x.href}catch(_){}return (e.customer?`<small>Nº ${esc(e.customer)}</small>`:'')+(u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">Web de pago</a>`:'')}
 function renderAgenda(){
   const month = upcomingMonth();
   const scope = $('#agendaScope').value;
@@ -329,13 +360,15 @@ function renderAgenda(){
     const paidId = state.marks[markKey];
     const actual = state.actuals.find(a=>a.id===paidId);
     if(actual) paid += actual.amount; else if(it.active) pending += it.amount;
+    const filter=$('#billStatus').value, query=$('#billSearch').value.toLowerCase();
+    if(!it.name.toLowerCase().includes(query)||(filter==='pending'&&(actual||!it.active))||(filter==='paid'&&!actual))return '';
     const status = actual ? '<span class="badge">Pagado</span>' : (it.active ? '<span class="badge">Pendiente</span>' : '<span class="badge">Pausado</span>');
     const btns = actual
       ? `<button data-action="undo" data-kind="${it.kind}" data-id="${it.id}">Deshacer</button>`
       : it.active
-        ? `<button class="soft" data-action="pay" data-kind="${it.kind}" data-id="${it.id}">Pago</button> <button data-action="skip" data-kind="${it.kind}" data-id="${it.id}">Omitir</button> <button data-action="end" data-kind="${it.kind}" data-id="${it.id}">Fin</button>`
+        ? `<button class="soft" data-action="pay" data-kind="${it.kind}" data-id="${it.id}">Pagar</button> <button data-action="skip" data-kind="${it.kind}" data-id="${it.id}">Omitir</button> <button data-action="end" data-kind="${it.kind}" data-id="${it.id}">Fin</button>`
         : `<button data-action="resume" data-kind="${it.kind}" data-id="${it.id}">Reactivar</button>`;
-    return (!selectedDay||selectedDay===it.day)?`<div class="agenda-item"><header><div><small>${String(it.day).padStart(2,'0')} · ${scopeName(it.scope)}</small><br><b>${esc(it.name)}</b></div><div class="right"><b>${money(it.amount)}</b><br>${status}</div></header><div class="actions">${btns}</div></div>`:'';
+    return (!selectedDay||selectedDay===it.day)?`<div class="agenda-item"><header><div><small>${String(it.day).padStart(2,'0')} · ${scopeName(it.scope)}</small><br><b>${esc(it.name)}</b></div><div class="right"><b>${money(actual?actual.amount:it.amount)}</b><br>${status}</div></header><div class="actions">${btns}${it.kind==='expense'?paymentLink(it.id):''}</div></div>`:'';
   }).join('');
   $('#agendaCards').innerHTML = [
     ['Pendiente',pending],['Pagado',paid],['Total',pending+paid],['Mes',month.replace('-', '/')] 
@@ -356,8 +389,8 @@ function renderAgenda(){
 }
 
 function renderMovementSelectors(){
-  const opts = '<option value="">No aplica</option>' + state.debts.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('');
-  $('#movementDebt').innerHTML = opts;
+  const old=$('#movementDebt').value; const opts = '<option value="">No aplica</option>' + state.debts.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('');
+  $('#movementDebt').innerHTML = opts; $('#movementDebt').value=old; syncFields();
 }
 function renderMovs(){
   const actuals = [...state.actuals].sort((a,b)=>b.date.localeCompare(a.date));
@@ -389,16 +422,8 @@ function renderDebts(){
 }
 
 function renderExpenses(){
-  const rows = state.expenses.map(e=>`<tr>
-    <td><select data-exp-edit="scope" data-id="${e.id}"><option value="personal" ${e.scope==='personal'?'selected':''}>Personal</option><option value="business" ${e.scope==='business'?'selected':''}>MAPPIN</option></select></td>
-    <td><input data-exp-edit="name" data-id="${e.id}" value="${esc(e.name)}"></td>
-    <td><input data-exp-edit="amount" data-id="${e.id}" type="number" min="0" value="${num(e.amount)}"></td>
-    <td><input data-exp-edit="day" data-id="${e.id}" type="number" min="1" max="31" value="${num(e.day)}"></td>
-    <td><button data-del-exp="${e.id}">Borrar</button></td>
-  </tr>`).join('');
-  $('#expenseTable').innerHTML = `<table><thead><tr><th>Ámbito</th><th>Nombre</th><th>Monto</th><th>Día</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+ $('#expenseTable').innerHTML=['personal','business'].map(scope=>`<h3>${scopeName(scope)}</h3>`+state.expenses.filter(e=>e.scope===scope).map(e=>`<div class="billcard"><div class="kpiLine"><span><b>${esc(e.name)}</b><br><small>Día ${e.day} · ${activeRule(e,upcomingMonth())?'Activo':'Pausado'}</small></span><strong>${money(e.amount)}</strong></div><details><summary>Editar</summary><div class="row"><label>Nombre<input data-exp-edit="name" data-id="${esc(e.id)}" value="${esc(e.name)}"></label><label>Monto<input type="number" min="0" data-exp-edit="amount" data-id="${esc(e.id)}" value="${num(e.amount)}"></label><label>Día<input type="number" min="1" max="31" data-exp-edit="day" data-id="${esc(e.id)}" value="${num(e.day)}"></label><label>Cuenta<select data-exp-edit="scope" data-id="${esc(e.id)}"><option value="personal" ${e.scope==='personal'?'selected':''}>Personal</option><option value="business" ${e.scope==='business'?'selected':''}>MAPPIN</option></select></label><label>Nº cliente<input data-exp-edit="customer" data-id="${esc(e.id)}" value="${esc(e.customer||'')}"></label><label>Web de pago<input data-exp-edit="url" data-id="${esc(e.id)}" value="${esc(e.url||'')}"></label></div></details></div>`).join('')).join('');
 }
-
 function plan24(){
   const rows=[];
   let personalDebt = sumBy(state.debts.filter(d=>d.scope==='personal'),d=>d.balance);
@@ -418,7 +443,8 @@ function plan24(){
   return `<table><thead><tr><th>Mes</th><th>Ing. pers.</th><th>Gasto pers.</th><th>Cuotas pers.</th><th>Saldo pers.</th><th>Ing. MAPPIN</th><th>Gasto MAPPIN</th><th>Cuotas MAPPIN</th><th>Saldo MAPPIN</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
 }
 function renderMore(){
-  const f = $('#settingsForm');
+  $('#budgetSummary').innerHTML=['personal','business'].map(scope=>{let m=upcomingMonth(),income=scope==='personal'?num(state.settings.salary)+num(state.settings.advance):num(state.settings.extra),expenses=sumBy(agendaItems(m,scope).filter(e=>e.active),e=>num(e.amount));return `<div class="billcard"><b>${scopeName(scope)}</b><div class="kpiLine"><span>Ingresos previstos</span><strong>${money(income)}</strong></div><div class="kpiLine"><span>Compromisos</span><strong>${money(expenses)}</strong></div><div class="kpiLine"><span>Margen previsto</span><strong>${money(income-expenses)}</strong></div></div>`}).join('');
+ const f = $('#settingsForm');
   for(const key of ['salary','advance','extra','cash','businessCash','savingGoal']) f.elements[key].value = num(state.settings[key]);
   renderExpenses();
   $('#extraList').innerHTML=state.events.map(e=>`<div class="kpiLine"><span>${esc(e.name)}<br><small>${esc(e.date)} · ${e.uncertain?'Por cobrar':scopeName(e.scope)}</small></span><strong>${money(e.amount)}</strong><button data-extra-del="${esc(e.id)}">Quitar</button></div>`).join('');
@@ -433,6 +459,7 @@ function render(){
 // Events
 $('#nav').addEventListener('click',e=>{ const b=e.target.closest('button[data-tab]'); if(b) openTab(b.dataset.tab); });
 document.body.addEventListener('click',e=>{
+  if(e.target.closest('[data-month-agenda]')){ $('#agendaMonth').value=$('#summaryMonth').value;$('#agendaScope').value=$('#summaryScope').value;$('#billStatus').value='pending';$('#billSearch').value='';selectedDay=0;renderAgenda();openTab('agenda');return;}
   const dayBtn=e.target.closest('[data-day]');if(dayBtn){selectedDay=+dayBtn.dataset.day;renderAgenda();return;}
   const extraDel=e.target.closest('[data-extra-del]');if(extraDel){state.events=state.events.filter(x=>x.id!==extraDel.dataset.extraDel);render();return;}
   const go = e.target.closest('[data-go]'); if(go){ openTab(go.dataset.go); return; }
@@ -462,20 +489,19 @@ document.body.addEventListener('click',e=>{
         item.end = `${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,'0')}`;
       }
     } else if(act.dataset.action==='pay'){
-      const amount = prompt('Monto pagado', kind==='debt'?item.payment:item.amount);
+      const amount = prompt('Monto pagado', agendaItems(month).find(x=>x.id===id)?.amount||0);
       if(amount===null) return;
-      const amt = num(amount); if(!amt) return;
+      const amt = num(amount); if(amt<=0) return;
       let principal = 0, lateReduction=0;
       if(kind==='debt'){
-        const cap = prompt('Capital amortizado confirmado', 0);
+        const cap = prompt('Capital amortizado confirmado', simpleDebt(item)?Math.min(amt,item.balance):0);
         if(cap===null) return;
         principal = Math.min(num(cap), amt, item.balance);
-        item.balance = Math.max(0, item.balance - principal);
         lateReduction=0;
       }
       const day = String(item.day||5).padStart(2,'0');
-      const date = prompt('Fecha real', `${month}-${day}`) || `${month}-${day}`;
-      const movement = {id:uid('m'),scope:item.scope,date,name:item.name,type:kind==='debt'?'debt':'expense',debt:kind==='debt'?id:'',amount:amt,principal,lateReduction};
+      const date = prompt('Fecha real (AAAA-MM-DD)', localDate()); if(!date||!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(Date.parse(date)))return; const plannedAmount=agendaItems(month).find(x=>x.id===id&&x.kind===kind)?.amount??amt; if(kind==='debt')item.balance=Math.max(0,item.balance-principal);
+      const movement = {id:uid('m'),scope:item.scope,date,name:item.name,type:kind==='debt'?'debt':'expense',debt:kind==='debt'?id:'',amount:amt,principal,lateReduction,plannedAmount,commitmentMonth:month,commitmentId:id};
       state.actuals.push(movement);
       state.marks[key] = movement.id;
     } else if(act.dataset.action==='undo'){
@@ -494,9 +520,9 @@ document.body.addEventListener('click',e=>{
 
 document.body.addEventListener('change',e=>{
   const d = e.target;
-  if(d.matches('[data-debt-edit]')){ const x=state.debts.find(z=>z.id===d.dataset.id); if(!x) return; const k=d.dataset.debtEdit; x[k]=['balance','payment','late','day'].includes(k)?num(d.value):d.value; save(); renderDebts(); renderAgenda(); renderMore(); return; }
+  if(d.matches('[data-debt-edit]')){ const x=state.debts.find(z=>z.id===d.dataset.id); if(!x) return; const k=d.dataset.debtEdit; x[k]=['balance','payment','late','day'].includes(k)?num(d.value):d.value; save(); renderDebts(); renderAgenda(); renderMore(); renderHome(); return; }
   if(d.matches('[data-exp-edit]')){ const x=state.expenses.find(z=>z.id===d.dataset.id); if(!x) return; const k=d.dataset.expEdit; x[k]=['amount','day'].includes(k)?num(d.value):d.value; save(); renderExpenses(); renderAgenda(); renderMore(); renderHome(); return; }
-  if(d.matches('[data-edit]')){ const group=d.dataset.kind==='debt'?state.debts:state.expenses; const x=group.find(z=>z.id===d.dataset.id); if(!x) return; x[d.dataset.edit]=d.value; save(); renderAgenda(); return; }
+  if(d.matches('[data-edit]')){ const group=d.dataset.kind==='debt'?state.debts:state.expenses; const x=group.find(z=>z.id===d.dataset.id); if(!x) return; x[d.dataset.edit]=d.value; save(); renderAgenda(); renderHome(); renderMore(); return; }
 });
 
 $('#movementForm').addEventListener('submit',e=>{
@@ -505,16 +531,16 @@ $('#movementForm').addEventListener('submit',e=>{
   const amount = num(f.amount), principal = num(f.principal);
   if(amount<=0) return;
   if(f.type==='debt' && !f.debt){ alert('Selecciona una deuda.'); return; }
-  if(principal>amount){ alert('El capital no puede superar el monto.'); return; }
-  state.actuals.push({id:uid('m'),scope:f.type==='debt'?(state.debts.find(d=>d.id===f.debt)?.scope||f.scope):f.scope,date:f.date,name:f.name,type:f.type,debt:f.debt,amount,principal});
+  if(principal<0||principal>amount||(f.type==='debt'&&principal>num(state.debts.find(d=>d.id===f.debt)?.balance))){ alert('El capital no puede superar el monto.'); return; }
+  state.actuals.push({id:uid('m'),scope:f.type==='debt'?(state.debts.find(d=>d.id===f.debt)?.scope||f.scope):f.scope,date:f.date,name:f.name,type:f.type,debt:f.debt,amount,principal:f.type==='debt'?principal:0});
   if(f.type==='debt'){
     const debt = state.debts.find(d=>d.id===f.debt);
     if(debt){ debt.balance = Math.max(0, debt.balance - principal); /* Mora se actualiza con confirmación del acreedor. */ }
   }
   e.target.reset();
   e.target.elements.scope.value='personal';
-  e.target.elements.type.value='income';
-  render();
+  e.target.elements.type.value='income'; e.target.elements.date.value=localDate();
+  render(); syncFields();
 });
 $('#debtForm').addEventListener('submit',e=>{
   e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
@@ -543,8 +569,14 @@ $('#importFile').addEventListener('change',async e=>{
 });
 $('#resetBtn').addEventListener('click',()=>{ if(confirm('¿Volver a los datos base?')){ state=deepClone(initial); render(); } });
 
-render();
-$('#movementForm').elements.date.value = new Date().toISOString().slice(0,10);
+function localDate(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function simpleDebt(d){return d&&/Abel|Jhonatan|UBO|Tusdeudas/i.test(d.name)}
+function syncFields(auto=false){const f=$('#movementForm'),debt=f.elements.type.value==='debt';$('#debtField').hidden=!debt;$('#capitalField').hidden=!debt;f.elements.debt.disabled=!debt;f.elements.principal.disabled=!debt;if(!debt)f.elements.principal.value=0;else if(auto){let d=state.debts.find(x=>x.id===f.elements.debt.value);f.elements.principal.value=simpleDebt(d)?Math.min(num(f.elements.amount.value),num(d.balance)):0;}}
+$('#movementForm').addEventListener('input',e=>{if(['amount','type','debt'].includes(e.target.name))syncFields(true)});
+$('#billSearch').addEventListener('input',renderAgenda);$('#billStatus').addEventListener('change',renderAgenda);
+$('#summaryMonth').value=localDate().slice(0,7);if($('#summaryMonth').value<'2026-11'||$('#summaryMonth').value>'2028-11')$('#summaryMonth').value='2026-12';$('#summaryMonth').addEventListener('change',renderMonthly);$('#summaryScope').addEventListener('change',renderMonthly);
+render(); syncFields();
+$('#movementForm').elements.date.value = localDate();
 $('#movementForm').elements.type.value = 'income';
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(console.error)}</script></body>
