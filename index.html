@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finanzas Johanne</title>
+<style>
+:root{
+  --bg:#f4f6f7;--card:#ffffff;--text:#183028;--muted:#66766e;--line:#dde5e1;
+  --brand:#196a58;--brand2:#0f4f43;--soft:#eaf4f1;--warn:#fff6e8;--warnline:#d4a049;
+  --danger:#b43e4f;--shadow:0 6px 22px rgba(17,44,35,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{padding-bottom:80px}
+header{padding:18px 16px 10px}
+.banner{background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff;border-radius:22px;padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.banner:after{content:"";position:absolute;right:-18px;top:-18px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
+.banner small{display:block;opacity:.85;letter-spacing:1.2px;font-size:11px;font-weight:700;text-transform:uppercase}
+.banner h1{margin:6px 0 4px;font-size:30px;line-height:1;letter-spacing:-1px}
+.banner p{margin:0;max-width:240px;color:#dceae5;font-size:13px}
+main{max-width:980px;margin:0 auto;padding:0 12px 20px}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:sticky;top:0;background:linear-gradient(var(--bg),rgba(244,246,247,.92));backdrop-filter:blur(6px);padding:10px 0 12px;z-index:10}
+.nav button{border:0;border-radius:14px;background:transparent;padding:10px 6px;min-height:46px;font:600 13px system-ui;color:var(--muted);cursor:pointer}
+.nav button.active{background:var(--card);color:var(--brand);box-shadow:var(--shadow);border:1px solid var(--line)}
+section{display:none}.show{display:block}
+.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.panel{padding:14px;margin:0 0 12px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.card{padding:14px}
+.card small{display:block;color:var(--muted);font-size:12px}
+.card strong{display:block;font-size:24px;letter-spacing:-.7px;margin-top:6px}
+h2{font-size:18px;margin:0 0 10px;letter-spacing:-.4px}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:0 0 10px}.muted{color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.row>*{flex:1 1 130px}
+label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted)}
+input,select,button,textarea{font:inherit}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;min-height:44px;padding:10px 12px;color:var(--text)}
+textarea{min-height:82px;resize:vertical}
+button{min-height:42px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);padding:10px 12px;cursor:pointer}
+button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+button.soft{background:var(--soft);color:var(--brand);border-color:#d2e8e1}
+button.danger{color:var(--danger)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.quick button:first-child{grid-column:1/-1}
+.note{padding:11px 12px;background:var(--warn);border-left:4px solid var(--warnline);border-radius:12px;color:#5b4b28}
+.tableWrap{overflow:auto;border-radius:14px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;white-space:nowrap;background:#fff}
+th,td{padding:10px 8px;border-bottom:1px solid #edf1ef;text-align:left;font-size:13px;vertical-align:top}
+th{font-size:11px;text-transform:uppercase;color:var(--muted);background:#fbfcfc}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--soft);color:var(--brand);font-size:11px;font-weight:700}
+.kpiLine{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.kpiLine:last-child{border-bottom:0}
+.right{text-align:right}.dangerText{color:var(--danger)}.good{color:var(--brand)}
+.hidden{display:none !important}
+footer{padding:8px 4px 0;color:var(--muted);font-size:12px;text-align:center}
+@media (min-width:760px){
+  header{padding:20px 20px 12px} main{padding:0 20px 24px}.cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
+}
+
+header{max-width:980px;margin:auto}.banner{padding:28px 22px;background:linear-gradient(115deg,#102b37,#14594d);min-height:145px}.banner h1{font-size:clamp(25px,6vw,38px);position:relative;z-index:1}.banner-meta{font-size:11px;letter-spacing:2px;margin-top:13px;color:#b9d7d1}.banner-meta span{padding:0 7px}.banner-art{position:absolute;width:45%;height:85%;right:14px;bottom:0;pointer-events:none}.nav{border-bottom:1px solid var(--line)}.nav button{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}.nav button svg{width:19px;height:19px}.card strong{font-size:clamp(17px,4vw,26px)}.card:first-child{border-top:3px solid #196a58}.quick button{font-weight:650}.tableWrap button{font-size:12px}.agenda-list{display:grid;gap:8px}.agenda-item{padding:12px;border:1px solid var(--line);border-radius:14px}.agenda-item header{padding:0;display:flex;justify-content:space-between;gap:10px}.agenda-item .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.agenda-item small{color:var(--muted)}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0}.calendar-grid button{padding:4px;min-height:40px;font-size:12px}.calendar-grid button.selected{background:var(--brand);color:white}.calendar-grid .dot{display:block;font-size:9px;color:#79ad9b}.calendar-grid .selected .dot{color:white}.calendar-grid .weekday{text-align:center;font-size:11px;color:var(--muted)}.row input,.row select{min-width:0}.banner p{display:none}@media(max-width:600px){.nav{position:fixed;bottom:0;top:auto;left:0;right:0;padding:6px 8px calc(7px + env(safe-area-inset-bottom));background:white;box-shadow:0 -4px 20px #102b3710;gap:3px}.nav button{font-size:11px}.nav button.active{box-shadow:none;background:var(--soft)}.banner-art{opacity:.55}.tableWrap input,.tableWrap select{min-width:100px}body{padding-bottom:100px}}
+</style>
+<link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#123d42"></head>
+<body>
+<header>
+  <div class="banner">
+    <small>2026 — 2028</small>
+    <h1>Finanzas Johanne</h1>
+    <div class="banner-meta">PERSONAL <span>·</span> MAPPIN</div><svg class="banner-art" viewBox="0 0 220 110" aria-hidden="true"><path d="M0 95 L45 73 L83 83 L125 40 L163 53 L215 8" fill="none" stroke="white" stroke-opacity=".65" stroke-width="3"/><path d="M0 95 L45 73 L83 83 L125 40 L163 53 L215 8 L215 110 L0 110Z" fill="white" opacity=".08"/><circle cx="215" cy="8" r="5" fill="#b9e9d7"/></svg>
+  </div>
+</header>
+<main>
+  <nav class="nav" id="nav"></nav>
+
+  <section id="inicio" class="show">
+    <div class="cards" id="homeCards"></div>
+    <div class="panel">
+      <h2>Hoy</h2>
+      <div id="todayLines"></div>
+      <div class="quick">
+        <button class="primary" data-go="movs">+ Movimiento</button>
+        <button data-go="agenda">Agenda</button>
+        <button data-go="deudas">Deudas</button>
+        <button data-go="mas">Más</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Alertas</h2>
+      <div id="alerts"></div>
+    </div>
+  </section>
+
+  <section id="agenda">
+    <div class="panel">
+      <div class="row">
+        <label>Mes<input id="agendaMonth" type="month" value="2026-12" min="2026-11" max="2028-11"></label>
+        <label>Ámbito<select id="agendaScope"><option value="all">Todos</option><option value="personal">Personal</option><option value="business">MAPPIN</option></select></label>
+      </div>
+    </div>
+    <div class="cards" id="agendaCards"></div>
+    <div class="panel">
+      <h2>Compromisos</h2>
+      <div id="calendarGrid"></div><div id="agendaTable"></div>
+    </div>
+    <div class="panel">
+      <h2>Reglas</h2>
+      <p class="muted">Aquí puedes terminar, pausar u omitir compromisos automáticos sin borrar el historial.</p>
+      <div class="tableWrap" id="rulesTable"></div>
+    </div>
+  </section>
+
+  <section id="movs">
+    <div class="grid2">
+      <div class="panel">
+        <h2>Registrar</h2>
+        <form id="movementForm" class="row">
+          <label>Ámbito<select name="scope"><option value="personal">Personal</option><option value="business">MAPPIN</option></select></label>
+          <label>Fecha<input name="date" type="date" required></label>
+          <label>Tipo<select name="type"><option value="income">Ingreso</option><option value="expense">Gasto</option><option value="debt">Pago deuda</option><option value="saving">Ahorro</option><option value="reserve">Emergencia</option></select></label>
+          <label>Detalle<input name="name" required></label>
+          <label>Deuda<select name="debt" id="movementDebt"><option value="">No aplica</option></select></label>
+          <label>Monto<input name="amount" type="number" min="1" required></label>
+          <label>Capital<input name="principal" type="number" min="0" value="0"></label>
+          <div><button class="primary" type="submit">Guardar</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Resumen</h2>
+        <div id="movSummary"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Historial</h2>
+      <div class="tableWrap" id="movTable"></div>
+    </div>
+  </section>
+
+  <section id="deudas">
+    <div class="panel">
+      <h2>Deudas</h2>
+      <div class="tableWrap" id="debtTable"></div>
+    </div>
+    <div class="panel">
+      <h2>Agregar</h2>
+      <form id="debtForm" class="row">
+        <label>Ámbito<select name="scope"><option value="personal">Personal</option><option value="business">MAPPIN</option></select></label>
+        <label>Nombre<input name="name" required></label>
+        <label>Saldo<input name="balance" type="number" min="0" required></label>
+        <label>Cuota<input name="payment" type="number" min="0" required></label>
+        <label>Vencido<input name="late" type="number" min="0" value="0"></label>
+        <label>Día<input name="day" type="number" min="1" max="31" value="5"></label>
+        <div><button class="primary" type="submit">Agregar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="mas">
+    <div class="panel">
+      <h2>Base</h2>
+      <form id="settingsForm" class="row">
+        <label>Pago día 5<input name="salary" type="number" min="0"></label>
+        <label>Pago día 20<input name="advance" type="number" min="0"></label>
+        <label>Ingreso mensual MAPPIN<input name="extra" type="number" min="0"></label>
+        <label>Caja personal<input name="cash" type="number" min="0"></label>
+        <label>Caja MAPPIN<input name="businessCash" type="number" min="0"></label>
+        <label>Ahorro meta<input name="savingGoal" type="number" min="0"></label>
+        <div><button class="primary" type="submit">Actualizar</button></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>Gastos</h2>
+      <div class="tableWrap" id="expenseTable"></div>
+      <form id="expenseForm" class="row" style="margin-top:10px">
+        <label>Ámbito<select name="scope"><option value="personal">Personal</option><option value="business">MAPPIN</option></select></label>
+        <label>Nombre<input name="name" required></label>
+        <label>Monto<input name="amount" type="number" min="0" required></label>
+        <label>Día<input name="day" type="number" min="1" max="31" value="20"></label>
+        <div><button class="primary" type="submit">Agregar</button></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>Extras</h2><form id="extraForm" class="row"><label>Cuenta<select name="scope"><option value="personal">Personal</option><option value="business">MAPPIN</option></select></label><label>Fecha<input name="date" type="date" required></label><label>Tipo<select name="type"><option value="expense">Gasto</option><option value="income">Ingreso</option></select></label><label>Detalle<input name="name" required></label><label>Monto<input name="amount" type="number" min="1" required></label><button class="primary">Agregar</button></form><div id="extraList"></div></div><div class="panel"><h2>Plan 24m</h2><p class="muted">Escenario de cuotas programadas, sin regularización de atrasos. Los saldos negativos indican dinero faltante. Cobros inciertos excluidos.</p>
+      <div class="tableWrap" id="planTable"></div>
+    </div>
+    <div class="panel">
+      <h2>Respaldo</h2>
+      <div class="row">
+        <div><button id="exportBtn" class="primary" type="button">Exportar</button></div>
+        <label>Importar<input id="importFile" type="file" accept=".json,application/json"></label>
+        <div><button id="resetBtn" type="button" class="danger">Reiniciar</button></div>
+      </div>
+      <p id="saveState" class="muted" style="margin-top:10px"></p>
+    </div>
+  </section>
+
+  <footer>Funciona offline. No reemplaza asesoría financiera ni jurídica. Falabella y recargos reales siguen pendientes de confirmar.</footer>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const storageKeys = ['finanzas-johanne-web','finanzas-johanne-v5','finanzas24-v1'];
+const monthList = [];
+for(let y=2026,m=12;y<2028 || (y===2028&&m<=11);m++){ if(m===13){m=1;y++;} monthList.push(`${y}-${String(m).padStart(2,'0')}`); }
+const initial = {settings:{salary:0,advance:0,extra:0,cash:0,businessCash:0,savingGoal:0},expenses:[],debts:[],actuals:[],events:[],marks:{},ui:{tab:'inicio'}};
+let state = loadState();
+let selectedDay=0;
+
+function deepClone(x){return JSON.parse(JSON.stringify(x));}
+function uid(p='id'){return p+Math.random().toString(36).slice(2,9)}
+function num(v){v=Number(v); return Number.isFinite(v)?v:0}
+function money(v){const n=Math.round(num(v)); return n.toLocaleString('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0});}
+function esc(t){return String(t??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
+function scopeName(s){return s==='business'?'MAPPIN':'Personal'}
+
+function loadState(){
+  let found = null;
+  for(const k of storageKeys){
+    try{ const raw = localStorage.getItem(k); if(raw){ found = JSON.parse(raw); break; } }catch(e){}
+  }
+  if(!found) return deepClone(initial);
+  return migrate(found);
+}
+function migrate(raw){
+  const s = deepClone(initial);
+  if(raw.settings) Object.assign(s.settings, raw.settings);
+  if(Array.isArray(raw.expenses)) s.expenses = raw.expenses.map(e=>(Object.assign({start:'2026-12',end:'',skip:[],scope:'personal'},e)));
+  if(Array.isArray(raw.debts)) s.debts = raw.debts.map(d=>(Object.assign({start:'2026-12',end:'',skip:[],scope:'personal'},d)));
+  if(Array.isArray(raw.actuals)) s.actuals = raw.actuals;
+  s.events=Array.isArray(raw.events)?raw.events:s.events;
+  s.marks = raw.marks || raw.calendarMarks || {};
+  
+  for(const [k,v] of Object.entries(s.marks)){if(k.split('|').length===2){const [m,id]=k.split('|');s.marks[m+'|'+(s.debts.some(d=>d.id===id)?'debt':'expense')+'|'+id]=v;}}
+
+  s.ui = {tab:'inicio'};
+  return s;
+}
+function save(){
+  try{ localStorage.setItem('finanzas-johanne-web', JSON.stringify(state)); $('#saveState').textContent = 'Guardado en este dispositivo.'; }
+  catch(e){ $('#saveState').textContent = 'No se pudo guardar localmente. Exporta un respaldo.'; }
+}
+
+const tabs = [
+  ['inicio','Inicio'],['agenda','Agenda'],['movs','Movs.'],['deudas','Deudas'],['mas','Más']
+];
+const icons=['<path d="M3 10l9-7 9 7v11H3z M9 21v-8h6v8"/>','<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/>','<path d="M4 8h16m-4-4 4 4-4 4M20 16H4m4-4-4 4 4 4"/>','<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/>','<path d="M5 6h14M5 12h14M5 18h14"/>'];
+function renderNav(){
+  $('#nav').innerHTML = tabs.map(([id,label],i)=>`<button data-tab="${id}" class="${state.ui.tab===id?'active':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${icons[i]}</svg>${label}</button>`).join('');
+}
+function openTab(id){
+  state.ui.tab = id;
+  document.querySelectorAll('section').forEach(sec=>sec.classList.toggle('show',sec.id===id));
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  save();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function sumBy(arr, fn){ return arr.reduce((a,b)=>a+fn(b),0); }
+function actualScopeBalance(scope){
+  const base = scope==='business'?num(state.settings.businessCash):num(state.settings.cash);
+  return base + sumBy(state.actuals.filter(a=>a.scope===scope), a => {
+    if(['income'].includes(a.type)) return a.amount;
+    if(['expense','debt','saving','reserve'].includes(a.type)) return -a.amount;
+    return 0;
+  });
+}
+function currentDebt(){ return sumBy(state.debts, d=>num(d.balance)); }
+function currentLate(){ return sumBy(state.debts, d=>num(d.late)); }
+function capitalPaid(){ return sumBy(state.actuals.filter(a=>a.type==='debt'), a=>num(a.principal)); }
+function upcomingMonth(){ return $('#agendaMonth')?.value || '2026-12'; }
+
+function homeData(){
+  return {
+    personal: actualScopeBalance('personal'),
+    business: actualScopeBalance('business'),
+    debt: currentDebt(),
+    savings: sumBy(state.actuals.filter(a=>a.type==='saving'), a=>a.amount),
+    reserve: sumBy(state.actuals.filter(a=>a.type==='reserve'), a=>a.amount),
+    late: currentLate(),
+    capital: capitalPaid(),
+  };
+}
+function renderHome(){
+  const h = homeData();
+  $('#homeCards').innerHTML = [
+    ['Personal',h.personal],['MAPPIN',h.business],['Deuda',h.debt],['Ahorro',h.savings]
+  ].map(([k,v])=>`<div class="card"><small>${k}</small><strong class="${v<0?'dangerText':''}">${money(v)}</strong></div>`).join('');
+  $('#todayLines').innerHTML = `
+    <div class="kpiLine"><span>Liquidez total</span><strong>${money(h.personal+h.business)}</strong></div>
+    <div class="kpiLine"><span>Vencido conocido</span><strong class="dangerText">${money(h.late)}</strong></div>
+    <div class="kpiLine"><span>Capital pagado</span><strong class="good">${money(h.capital)}</strong></div>
+    <div class="kpiLine"><span>Fondo de emergencia</span><strong>${money(h.reserve)}</strong></div>`;
+  const alerts=[];
+  if(h.personal<=0) alerts.push('Tu caja personal está en cero o negativa.');
+  if(h.business<=0) alerts.push('MAPPIN aún no tiene caja disponible.');
+  if(h.late>0) alerts.push(`Tienes ${money(h.late)} en cuotas vencidas conocidas.`);
+  const fal = state.debts.find(d=>/falabella/i.test(d.name));
+  if(fal && !fal.balance) alerts.push('Falabella sigue pendiente de confirmar.');
+  $('#alerts').innerHTML = alerts.length ? alerts.map(x=>`<div class="note" style="margin-bottom:8px">${esc(x)}</div>`).join('') : `<p class="muted">Sin alertas críticas nuevas.</p>`;
+}
+
+function activeRule(item, month){
+  if(item.start && month < item.start) return false;
+  if(item.end && month > item.end) return false;
+  if(Array.isArray(item.skip) && item.skip.includes(month)) return false;
+  return true;
+}
+function agendaItems(month, scope='all'){
+  const out=[];
+  const last=new Date(+month.slice(0,4),+month.slice(5),0).getDate();
+  for(const e of state.expenses){
+    if(scope!=='all' && e.scope!==scope) continue;
+    out.push({kind:'expense',id:e.id,name:e.name,scope:e.scope,day:Math.min(last,e.day),amount:e.amount,active:activeRule(e,month)});
+  }
+  for(const d of state.debts){
+    if(scope!=='all' && d.scope!==scope) continue;
+    let remaining=d.balance; for(const m of monthList){if(m>=month)break;if(activeRule(d,m)&&!state.marks[m+'|debt|'+d.id])remaining=Math.max(0,remaining-d.payment)};const amount=Math.min(d.payment,remaining);if(amount||state.marks[month+'|debt|'+d.id])out.push({kind:'debt',id:d.id,name:d.name,scope:d.scope,day:Math.min(last,d.day),amount,active:activeRule(d,month)});
+  }
+  return out.sort((a,b)=>(a.day-b.day)||a.name.localeCompare(b.name));
+}
+function renderAgenda(){
+  const month = upcomingMonth();
+  const scope = $('#agendaScope').value;
+  const items = agendaItems(month, scope);
+  let pending=0, paid=0;
+  const rows = items.map(it=>{
+    const markKey = month+'|'+it.kind+'|'+it.id;
+    const paidId = state.marks[markKey];
+    const actual = state.actuals.find(a=>a.id===paidId);
+    if(actual) paid += actual.amount; else if(it.active) pending += it.amount;
+    const status = actual ? '<span class="badge">Pagado</span>' : (it.active ? '<span class="badge">Pendiente</span>' : '<span class="badge">Pausado</span>');
+    const btns = actual
+      ? `<button data-action="undo" data-kind="${it.kind}" data-id="${it.id}">Deshacer</button>`
+      : it.active
+        ? `<button class="soft" data-action="pay" data-kind="${it.kind}" data-id="${it.id}">Pago</button> <button data-action="skip" data-kind="${it.kind}" data-id="${it.id}">Omitir</button> <button data-action="end" data-kind="${it.kind}" data-id="${it.id}">Fin</button>`
+        : `<button data-action="resume" data-kind="${it.kind}" data-id="${it.id}">Reactivar</button>`;
+    return (!selectedDay||selectedDay===it.day)?`<div class="agenda-item"><header><div><small>${String(it.day).padStart(2,'0')} · ${scopeName(it.scope)}</small><br><b>${esc(it.name)}</b></div><div class="right"><b>${money(it.amount)}</b><br>${status}</div></header><div class="actions">${btns}</div></div>`:'';
+  }).join('');
+  $('#agendaCards').innerHTML = [
+    ['Pendiente',pending],['Pagado',paid],['Total',pending+paid],['Mes',month.replace('-', '/')] 
+  ].map(([k,v])=>`<div class="card"><small>${k}</small><strong>${typeof v==='number'?money(v):v}</strong></div>`).join('');
+  const y=+month.slice(0,4), mo=+month.slice(5), first=(new Date(y,mo-1,1).getDay()+6)%7, last=new Date(y,mo,0).getDate();
+  $('#calendarGrid').innerHTML='<div class="calendar-grid">'+['L','M','M','J','V','S','D'].map(x=>'<div class="weekday">'+x+'</div>').join('')+'<div></div>'.repeat(first)+Array.from({length:last},(_,i)=>{let d=i+1;return `<button data-day="${d}" class="${selectedDay===d?'selected':''}">${d}<span class="dot">${items.some(x=>x.day===d&&x.active)||[5,20].includes(d)?'●':'&nbsp;'}</span></button>`}).join('')+'</div><button data-day="0">Todo el mes</button><p class="muted" style="margin-top:10px">'+(scope!=='business'?'5: sueldo '+money(state.settings.salary)+' · 20: anticipo '+money(state.settings.advance):'')+'</p>';
+  $('#agendaTable').innerHTML = '<div class="agenda-list">'+(rows||'<p>Sin compromisos</p>')+'</div>';
+  const allRules = [...state.expenses.map(e=>({...e,kind:'expense'})), ...state.debts.map(d=>({...d,kind:'debt'}))]
+    .filter(x=>scope==='all' || x.scope===scope)
+    .map(r=>`<tr>
+      <td>${scopeName(r.scope)}</td>
+      <td>${esc(r.name)}</td>
+      <td><input data-edit="start" data-kind="${r.kind}" data-id="${r.id}" type="month" value="${r.start||''}"></td>
+      <td><input data-edit="end" data-kind="${r.kind}" data-id="${r.id}" type="month" value="${r.end||''}"></td>
+      <td>${esc((r.skip||[]).join(', ') || '—')}</td>
+    </tr>`).join('');
+  $('#rulesTable').innerHTML = `<table><thead><tr><th>Ámbito</th><th>Nombre</th><th>Inicio</th><th>Término</th><th>Omitidos</th></tr></thead><tbody>${allRules}</tbody></table>`;
+}
+
+function renderMovementSelectors(){
+  const opts = '<option value="">No aplica</option>' + state.debts.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('');
+  $('#movementDebt').innerHTML = opts;
+}
+function renderMovs(){
+  const actuals = [...state.actuals].sort((a,b)=>b.date.localeCompare(a.date));
+  const sum=(type,scope)=>sumBy(actuals.filter(a=>a.type===type && (!scope || a.scope===scope)), a=>a.amount);
+  $('#movSummary').innerHTML = `
+    <div class="kpiLine"><span>Ingresos</span><strong>${money(sum('income'))}</strong></div>
+    <div class="kpiLine"><span>Gastos</span><strong>${money(sum('expense'))}</strong></div>
+    <div class="kpiLine"><span>Pagos deuda</span><strong>${money(sum('debt'))}</strong></div>
+    <div class="kpiLine"><span>Ahorro</span><strong>${money(sum('saving'))}</strong></div>
+    <div class="kpiLine"><span>Emergencia</span><strong>${money(sum('reserve'))}</strong></div>`;
+  const rows = actuals.map(a=>`<tr>
+      <td>${a.date}</td><td>${scopeName(a.scope)}</td><td>${esc(a.name)}</td><td>${esc(a.type)}</td>
+      <td>${esc(state.debts.find(d=>d.id===a.debt)?.name || '—')}</td><td>${money(a.amount)}</td><td>${money(a.principal||0)}</td>
+      <td><button data-del-actual="${a.id}">Borrar</button></td></tr>`).join('');
+  $('#movTable').innerHTML = `<table><thead><tr><th>Fecha</th><th>Ámbito</th><th>Detalle</th><th>Tipo</th><th>Deuda</th><th>Monto</th><th>Capital</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="8">Sin movimientos</td></tr>'}</tbody></table>`;
+}
+
+function renderDebts(){
+  const rows = state.debts.map(d=>`<tr>
+    <td><select data-debt-edit="scope" data-id="${d.id}"><option value="personal" ${d.scope==='personal'?'selected':''}>Personal</option><option value="business" ${d.scope==='business'?'selected':''}>MAPPIN</option></select></td>
+    <td><input data-debt-edit="name" data-id="${d.id}" value="${esc(d.name)}"></td>
+    <td><input data-debt-edit="balance" data-id="${d.id}" type="number" min="0" value="${num(d.balance)}"></td>
+    <td><input data-debt-edit="payment" data-id="${d.id}" type="number" min="0" value="${num(d.payment)}"></td>
+    <td><input data-debt-edit="late" data-id="${d.id}" type="number" min="0" value="${num(d.late)}"></td>
+    <td><input data-debt-edit="day" data-id="${d.id}" type="number" min="1" max="31" value="${num(d.day)}"></td>
+    <td><button data-del-debt="${d.id}">Borrar</button></td>
+  </tr>`).join('');
+  $('#debtTable').innerHTML = `<table><thead><tr><th>Ámbito</th><th>Nombre</th><th>Saldo</th><th>Cuota</th><th>Vencido</th><th>Día</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderExpenses(){
+  const rows = state.expenses.map(e=>`<tr>
+    <td><select data-exp-edit="scope" data-id="${e.id}"><option value="personal" ${e.scope==='personal'?'selected':''}>Personal</option><option value="business" ${e.scope==='business'?'selected':''}>MAPPIN</option></select></td>
+    <td><input data-exp-edit="name" data-id="${e.id}" value="${esc(e.name)}"></td>
+    <td><input data-exp-edit="amount" data-id="${e.id}" type="number" min="0" value="${num(e.amount)}"></td>
+    <td><input data-exp-edit="day" data-id="${e.id}" type="number" min="1" max="31" value="${num(e.day)}"></td>
+    <td><button data-del-exp="${e.id}">Borrar</button></td>
+  </tr>`).join('');
+  $('#expenseTable').innerHTML = `<table><thead><tr><th>Ámbito</th><th>Nombre</th><th>Monto</th><th>Día</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function plan24(){
+  const rows=[];
+  let personalDebt = sumBy(state.debts.filter(d=>d.scope==='personal'),d=>d.balance);
+  let businessDebt = sumBy(state.debts.filter(d=>d.scope==='business'),d=>d.balance);
+  const rem=Object.fromEntries(state.debts.map(d=>[d.id,d.balance]));
+  for(const m of monthList){
+    const incomePersonal = num(state.settings.salary) + num(state.settings.advance)+sumBy(state.events.filter(e=>e.date.startsWith(m)&&e.scope==='personal'&&e.type==='income'&&!e.uncertain),e=>e.amount);
+    const ev=state.events.filter(e=>e.date.startsWith(m)&&!e.uncertain);const incomeBusiness = num(state.settings.extra)+sumBy(ev.filter(e=>e.scope==='business'&&e.type==='income'),e=>e.amount);
+    const expPersonal = sumBy(state.expenses.filter(e=>e.scope==='personal' && activeRule(e,m)), e=>e.amount)+sumBy(ev.filter(e=>e.scope==='personal'&&e.type==='expense'),e=>e.amount);
+    const expBusiness = sumBy(state.expenses.filter(e=>e.scope==='business' && activeRule(e,m)), e=>e.amount)+sumBy(ev.filter(e=>e.scope==='business'&&e.type==='expense'),e=>e.amount);
+    const payPersonal = sumBy(state.debts.filter(d=>d.scope==='personal' && activeRule(d,m)), d=>{let p=state.marks[m+'|debt|'+d.id]?0:Math.min(d.payment,rem[d.id]);rem[d.id]-=p;return p;});
+    const payBusiness = sumBy(state.debts.filter(d=>d.scope==='business' && activeRule(d,m)), d=>{let p=state.marks[m+'|debt|'+d.id]?0:Math.min(d.payment,rem[d.id]);rem[d.id]-=p;return p;});
+    personalDebt = Math.max(0, personalDebt - payPersonal);
+    businessDebt = Math.max(0, businessDebt - payBusiness);
+    rows.push(`<tr><td>${m}</td><td>${money(incomePersonal)}</td><td>${money(expPersonal)}</td><td>${money(payPersonal)}</td><td>${money(incomePersonal-expPersonal-payPersonal)}</td><td>${money(incomeBusiness)}</td><td>${money(expBusiness)}</td><td>${money(payBusiness)}</td><td>${money(incomeBusiness-expBusiness-payBusiness)}</td></tr>`);
+  }
+  return `<table><thead><tr><th>Mes</th><th>Ing. pers.</th><th>Gasto pers.</th><th>Cuotas pers.</th><th>Saldo pers.</th><th>Ing. MAPPIN</th><th>Gasto MAPPIN</th><th>Cuotas MAPPIN</th><th>Saldo MAPPIN</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
+}
+function renderMore(){
+  const f = $('#settingsForm');
+  for(const key of ['salary','advance','extra','cash','businessCash','savingGoal']) f.elements[key].value = num(state.settings[key]);
+  renderExpenses();
+  $('#extraList').innerHTML=state.events.map(e=>`<div class="kpiLine"><span>${esc(e.name)}<br><small>${esc(e.date)} · ${e.uncertain?'Por cobrar':scopeName(e.scope)}</small></span><strong>${money(e.amount)}</strong><button data-extra-del="${esc(e.id)}">Quitar</button></div>`).join('');
+  $('#planTable').innerHTML = plan24();
+}
+
+function render(){
+  renderNav(); renderHome(); renderAgenda(); renderMovementSelectors(); renderMovs(); renderDebts(); renderMore(); save();
+  openTab(state.ui.tab || 'inicio');
+}
+
+// Events
+$('#nav').addEventListener('click',e=>{ const b=e.target.closest('button[data-tab]'); if(b) openTab(b.dataset.tab); });
+document.body.addEventListener('click',e=>{
+  const dayBtn=e.target.closest('[data-day]');if(dayBtn){selectedDay=+dayBtn.dataset.day;renderAgenda();return;}
+  const extraDel=e.target.closest('[data-extra-del]');if(extraDel){state.events=state.events.filter(x=>x.id!==extraDel.dataset.extraDel);render();return;}
+  const go = e.target.closest('[data-go]'); if(go){ openTab(go.dataset.go); return; }
+  const delActual = e.target.closest('[data-del-actual]');
+  if(delActual){if(!confirm('¿Eliminar movimiento?'))return;let a=state.actuals.find(x=>x.id===delActual.dataset.delActual);if(a?.type==='debt'){let d=state.debts.find(x=>x.id===a.debt);if(d){d.balance+=num(a.principal);d.late+=num(a.lateReduction)}}state.actuals=state.actuals.filter(x=>x.id!==delActual.dataset.delActual);for(let k in state.marks)if(state.marks[k]===delActual.dataset.delActual)delete state.marks[k];render();return;}
+  const delDebt = e.target.closest('[data-del-debt]');
+  if(delDebt){ if(confirm('¿Borrar deuda?')){ state.debts = state.debts.filter(d=>d.id!==delDebt.dataset.delDebt); render(); } return; }
+  const delExp = e.target.closest('[data-del-exp]');
+  if(delExp){ if(confirm('¿Borrar gasto?')){ state.expenses = state.expenses.filter(x=>x.id!==delExp.dataset.delExp); render(); } return; }
+  const act = e.target.closest('[data-action]');
+  if(act){
+    const month = upcomingMonth();
+    const kind = act.dataset.kind, id = act.dataset.id;
+    const arr = kind==='debt'?state.debts:state.expenses;
+    const item = arr.find(x=>x.id===id); if(!item) return;
+    const key = month+'|'+kind+'|'+id;
+    if(act.dataset.action==='skip'){if(kind==='debt'&&!confirm('Omitir no elimina la deuda. ¿Continuar?'))return;
+      item.skip = Array.from(new Set([...(item.skip||[]), month]));
+    } else if(act.dataset.action==='resume'){
+      item.skip = (item.skip||[]).filter(m=>m!==month);
+      if(item.end && month>item.end) item.end='';
+      if(item.start && month<item.start) item.start=month;
+    } else if(act.dataset.action==='end'){
+      if(confirm('Se detendrán los compromisos futuros, sin borrar historial.')){
+        const [y,m] = month.split('-').map(Number);
+        const prev = new Date(y,m-2,1);
+        item.end = `${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,'0')}`;
+      }
+    } else if(act.dataset.action==='pay'){
+      const amount = prompt('Monto pagado', kind==='debt'?item.payment:item.amount);
+      if(amount===null) return;
+      const amt = num(amount); if(!amt) return;
+      let principal = 0, lateReduction=0;
+      if(kind==='debt'){
+        const cap = prompt('Capital amortizado confirmado', 0);
+        if(cap===null) return;
+        principal = Math.min(num(cap), amt, item.balance);
+        item.balance = Math.max(0, item.balance - principal);
+        lateReduction=0;
+      }
+      const day = String(item.day||5).padStart(2,'0');
+      const date = prompt('Fecha real', `${month}-${day}`) || `${month}-${day}`;
+      const movement = {id:uid('m'),scope:item.scope,date,name:item.name,type:kind==='debt'?'debt':'expense',debt:kind==='debt'?id:'',amount:amt,principal,lateReduction};
+      state.actuals.push(movement);
+      state.marks[key] = movement.id;
+    } else if(act.dataset.action==='undo'){
+      const movId = state.marks[key];
+      const mov = state.actuals.find(m=>m.id===movId);
+      if(mov && kind==='debt'){
+        const debt = state.debts.find(d=>d.id===id);
+        if(debt){ debt.balance += num(mov.principal);debt.late+=num(mov.lateReduction); }
+      }
+      state.actuals = state.actuals.filter(m=>m.id!==movId);
+      delete state.marks[key];
+    }
+    render();
+  }
+});
+
+document.body.addEventListener('change',e=>{
+  const d = e.target;
+  if(d.matches('[data-debt-edit]')){ const x=state.debts.find(z=>z.id===d.dataset.id); if(!x) return; const k=d.dataset.debtEdit; x[k]=['balance','payment','late','day'].includes(k)?num(d.value):d.value; save(); renderDebts(); renderAgenda(); renderMore(); return; }
+  if(d.matches('[data-exp-edit]')){ const x=state.expenses.find(z=>z.id===d.dataset.id); if(!x) return; const k=d.dataset.expEdit; x[k]=['amount','day'].includes(k)?num(d.value):d.value; save(); renderExpenses(); renderAgenda(); renderMore(); renderHome(); return; }
+  if(d.matches('[data-edit]')){ const group=d.dataset.kind==='debt'?state.debts:state.expenses; const x=group.find(z=>z.id===d.dataset.id); if(!x) return; x[d.dataset.edit]=d.value; save(); renderAgenda(); return; }
+});
+
+$('#movementForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target));
+  const amount = num(f.amount), principal = num(f.principal);
+  if(amount<=0) return;
+  if(f.type==='debt' && !f.debt){ alert('Selecciona una deuda.'); return; }
+  if(principal>amount){ alert('El capital no puede superar el monto.'); return; }
+  state.actuals.push({id:uid('m'),scope:f.type==='debt'?(state.debts.find(d=>d.id===f.debt)?.scope||f.scope):f.scope,date:f.date,name:f.name,type:f.type,debt:f.debt,amount,principal});
+  if(f.type==='debt'){
+    const debt = state.debts.find(d=>d.id===f.debt);
+    if(debt){ debt.balance = Math.max(0, debt.balance - principal); /* Mora se actualiza con confirmación del acreedor. */ }
+  }
+  e.target.reset();
+  e.target.elements.scope.value='personal';
+  e.target.elements.type.value='income';
+  render();
+});
+$('#debtForm').addEventListener('submit',e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  state.debts.push({id:uid('d'),scope:f.scope,name:f.name,balance:num(f.balance),payment:num(f.payment),late:num(f.late),day:num(f.day),start:'2026-12',end:'',skip:[]});
+  e.target.reset(); e.target.elements.scope.value='personal'; e.target.elements.day.value=5; e.target.elements.late.value=0; render();
+});
+$('#expenseForm').addEventListener('submit',e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  state.expenses.push({id:uid('e'),scope:f.scope,name:f.name,amount:num(f.amount),day:num(f.day),start:'2026-12',end:'',skip:[]});
+  e.target.reset(); e.target.elements.scope.value='personal'; e.target.elements.day.value=20; render();
+});
+$('#extraForm').addEventListener('submit',e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target));state.events.push({...f,id:uid('x'),amount:num(f.amount)});e.target.reset();render();});
+$('#settingsForm').addEventListener('submit',e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  Object.keys(state.settings).forEach(k=>{ if(k in f) state.settings[k]=num(f[k]); }); render();
+});
+$('#agendaMonth').addEventListener('change',()=>{selectedDay=0;renderAgenda()}); $('#agendaScope').addEventListener('change',renderAgenda);
+$('#exportBtn').addEventListener('click',()=>{
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='finanzas-johanne-respaldo.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+$('#importFile').addEventListener('change',async e=>{
+  const file=e.target.files[0]; if(!file) return;
+  try{ const raw=JSON.parse(await file.text()); if(!raw.settings || !Array.isArray(raw.expenses) || !Array.isArray(raw.debts)) throw new Error('Archivo inválido'); if(confirm('¿Reemplazar los datos actuales?')){ state=migrate(raw); render(); } }
+  catch(err){ alert('No se pudo importar el respaldo.'); }
+});
+$('#resetBtn').addEventListener('click',()=>{ if(confirm('¿Volver a los datos base?')){ state=deepClone(initial); render(); } });
+
+render();
+$('#movementForm').elements.date.value = new Date().toISOString().slice(0,10);
+$('#movementForm').elements.type.value = 'income';
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(console.error)}</script></body>
+</html>
